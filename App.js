@@ -4,18 +4,23 @@
 // React Navigation V5 for screen navigation (stack + tab)
 
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
-import AppNavigator from "./navigation/AppNavigator";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
 
+import AppNavigator from "./navigation/AppNavigator";
 import messagesReducer from "./store/reducers/messages";
+import COLORS from "./constants/colors";
 
 // Return default font-family
 const fetchFonts = async () => {
-  return Font.loadAsync({});
+  return Font.loadAsync({
+    "segoe-ui-regular": require("./assets/fonts/Segoe_UI_Regular.ttf"),
+    "segoe-ui-bold": require("./assets/fonts/Segoe_UI_Bold.ttf"),
+    "segoe-ui-italic": require("./assets/fonts/Segoe_UI_Italic.ttf"),
+  });
 };
 
 const rootReducer = combineReducers({
@@ -38,6 +43,7 @@ export default function App() {
   }
   return (
     <Provider store={store}>
+      <StatusBar barStyle="light-content" backgroundColor={COLORS.Foreground} />
       <AppNavigator />
     </Provider>
   );
