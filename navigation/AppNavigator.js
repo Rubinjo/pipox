@@ -3,9 +3,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import HomeScreen from "../screens/HomeScreen";
-import SearchScreen from "../screens/SearchScreen";
-import UserScreen from "../screens/SearchScreen";
+import HomeScreen, {
+  tabOptions as homeTabOptions,
+} from "../screens/HomeScreen";
+
+import SearchScreen, {
+  tabOptions as searchTabOptions,
+} from "../screens/SearchScreen";
+
+import UserScreen, {
+  tabOptions as userTabOptions,
+} from "../screens/UserScreen";
+
 import MessageScreen from "../screens/MessageScreen";
 import COLORS from "../constants/colors";
 
@@ -14,6 +23,7 @@ const defaultStackOptions = {
     backgroundColor: COLORS.Foreground,
   },
   headerTintColor: COLORS.PrimaryColorOn,
+  headerTitleStyle: { alignSelf: "center" },
 };
 
 const defaultTabOptions = {
@@ -21,6 +31,7 @@ const defaultTabOptions = {
   inactiveBackgroundColor: COLORS.Foreground,
   activeTintColor: COLORS.PrimaryColorOn,
   inactiveTintColor: COLORS.PrimaryColorOff,
+  showLabel: false,
 };
 
 const HomeStack = createStackNavigator();
@@ -60,9 +71,21 @@ const AppNavigator = (props) => {
   return (
     <NavigationContainer>
       <Tab.Navigator tabBarOptions={defaultTabOptions}>
-        <Tab.Screen name="Home1" component={HomeStackNav} />
-        <Tab.Screen name="Search1" component={SearchStackNav} />
-        <Tab.Screen name="User1" component={UserStackNav} />
+        <Tab.Screen
+          name="Home"
+          component={HomeStackNav}
+          options={homeTabOptions}
+        />
+        <Tab.Screen
+          name="Search"
+          component={SearchStackNav}
+          options={searchTabOptions}
+        />
+        <Tab.Screen
+          name="User"
+          component={UserStackNav}
+          options={userTabOptions}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
