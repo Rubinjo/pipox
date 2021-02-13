@@ -32,6 +32,9 @@ const defaultTabOptions = {
   activeTintColor: COLORS.PrimaryColorOn,
   inactiveTintColor: COLORS.PrimaryColorOff,
   showLabel: false,
+  style: {
+    borderTopWidth: 0,
+  },
 };
 
 const HomeStack = createStackNavigator();
