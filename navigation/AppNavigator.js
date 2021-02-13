@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen, {
+  stackOptions as homeStackOptions,
   tabOptions as homeTabOptions,
 } from "../screens/HomeScreen";
 
@@ -16,14 +17,16 @@ import UserScreen, {
 } from "../screens/UserScreen";
 
 import MessageScreen from "../screens/MessageScreen";
+import NewScreen from "../screens/NewScreen";
+
 import COLORS from "../constants/colors";
 
 const defaultStackOptions = {
   headerStyle: {
     backgroundColor: COLORS.Foreground,
   },
+  headerTitleAlign: "center",
   headerTintColor: COLORS.PrimaryColorOn,
-  headerTitleStyle: { alignSelf: "center" },
 };
 
 const defaultTabOptions = {
@@ -46,8 +49,13 @@ const Tab = createBottomTabNavigator();
 const HomeStackNav = (props) => {
   return (
     <HomeStack.Navigator screenOptions={defaultStackOptions}>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={homeStackOptions}
+      />
       <HomeStack.Screen name="Message" component={MessageScreen} />
+      <HomeStack.Screen name="New" component={NewScreen} />
     </HomeStack.Navigator>
   );
 };

@@ -10,11 +10,16 @@ class MessageCard extends Component {
     super(props);
   }
 
-  openMessage = () => {};
+  openMessage = (navData) => {
+    navData.navigate({ name: "Message" });
+  };
 
   render() {
     return (
-      <TouchableOpacity onPress={() => openMessage()} activeOpacity={0.7}>
+      <TouchableOpacity
+        onPress={() => this.openMessage(this.props.navData)}
+        activeOpacity={0.7}
+      >
         <View style={styles.card}>
           <Text style={styles.messageText}>{this.props.message.text}</Text>
           <View style={styles.infoSection}>

@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { View, FlatList, Text, Button, StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import MessageCard from "../components/MessageCard";
+import HeaderButton from "../components/HeaderButton";
 import COLORS from "../constants/colors";
 import Config from "../components/Config";
 
@@ -23,7 +25,9 @@ const HomeScreen = (props) => {
     <View style={styles.screen}>
       <FlatList
         data={availableMessages}
-        renderItem={(itemData) => <MessageCard message={itemData.item} />}
+        renderItem={(itemData) => (
+          <MessageCard navData={props.navigation} message={itemData.item} />
+        )}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={<Text>KLOPT NIET</Text>}
         // contentContainerStyle={styles.listContainer}
@@ -32,6 +36,22 @@ const HomeScreen = (props) => {
       />
     </View>
   );
+};
+
+export const stackOptions = (navData) => {
+  return {
+    headerRight: (props) => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="CreateMessage"
+          iconName="new-message"
+          onPress={() => {
+            navData.navigation.navigate({ name: "New" });
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
 };
 
 export const tabOptions = (navData) => {
