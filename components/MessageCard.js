@@ -17,8 +17,12 @@ class MessageCard extends Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => this.openMessage(this.props.navData)}
-        activeOpacity={0.7}
+        onPress={
+          this.props.navData
+            ? () => this.openMessage(this.props.navData)
+            : void 0
+        }
+        activeOpacity={this.props.navData ? 0.7 : 1}
       >
         <View style={styles.card}>
           <Text style={styles.messageText}>{this.props.message.text}</Text>

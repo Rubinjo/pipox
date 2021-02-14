@@ -43,7 +43,7 @@ const UserScreen = (props) => {
             },
           ]}
         >
-          <Entypo name="chat" size={48} color={COLORS.PrimaryColorOff} />
+          <Entypo name="chat" size={48} color={COLORS.PrimaryColorOn} />
           <Text style={{ color: COLORS.grey }}>Respons</Text>
         </Pressable>
         <Pressable
@@ -65,7 +65,7 @@ const UserScreen = (props) => {
             },
           ]}
         >
-          <Entypo name="thumbs-up" size={48} color={COLORS.PrimaryColorOff} />
+          <Entypo name="thumbs-up" size={48} color={COLORS.PrimaryColorOn} />
           <Text style={{ color: COLORS.grey }}>Likes: 10</Text>
         </Pressable>
         <Pressable
@@ -87,7 +87,7 @@ const UserScreen = (props) => {
             },
           ]}
         >
-          <Entypo name="cycle" size={48} color={COLORS.PrimaryColorOff} />
+          <Entypo name="cycle" size={48} color={COLORS.PrimaryColorOn} />
           <Text style={{ color: COLORS.grey }}>Reload</Text>
         </Pressable>
       </View>
