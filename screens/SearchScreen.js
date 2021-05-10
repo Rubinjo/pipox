@@ -1,15 +1,27 @@
 import React, { useState } from "react";
-import { View, TextInput, Text, StyleSheet } from "react-native";
+import { View, FlatList, TextInput, Text, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 
 import COLORS from "../constants/colors";
 import Config from "../components/Config";
+import MessageCard from "../components/MessageCard";
 
 const SearchScreen = (props) => {
-  const [searchTerm, setSearchTerm] = useState();
+  const [refresh, setRefresh] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [searchMessages, setSearchMessages] = useState([]);
+
+  const handleRefresh = () => {
+    setRefresh(true);
+  };
+
+  const messages = useSelector((state) => state.messages.messages);
 
   const search = () => {
-    console.log(searchTerm);
+    setSearchMessages(
+      messages.filter((message) => message.text.includes(searchTerm))
+    );
   };
 
   return (
@@ -29,6 +41,16 @@ const SearchScreen = (props) => {
           }}
         />
       </View>
+      <FlatList
+        data={searchMessages}
+        renderItem={(itemData) => (
+          <MessageCard navData={props.navigation} message={itemData.item} />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+        // contentContainerStyle={styles.listContainer}
+        refreshing={refresh}
+        onRefresh={() => this.handleRefresh()} // Not yet working
+      />
     </View>
   );
 };
