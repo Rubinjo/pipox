@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, FlatList, Text, Button, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -8,18 +8,43 @@ import MessageCard from "../components/MessageCard";
 import HeaderButton from "../components/HeaderButton";
 import COLORS from "../constants/colors";
 import Config from "../components/Config";
+import * as userActions from "../store/actions/user";
+import * as messageActions from "../store/actions/messages";
 
 const HomeScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
-  const handleRefresh = () => {
-    setRefresh(true);
-  };
-
-  const test = (availableMessages) => {
-    console.log(availableMessages);
-  };
   const availableMessages = useSelector((state) => state.messages.messages);
+  const dispatch = useDispatch();
+
+  // Create new user
+  // Everytime you restart the app
+  const loadUser = useCallback(async () => {
+    try {
+      await dispatch(userActions.newUser());
+    } catch (err) {
+      console.log(err);
+    }
+  }, [dispatch, setIsLoading]);
+
+  // Load all messages
+  const loadMessages = useCallback(async () => {
+    setRefresh(true);
+    try {
+      await dispatch(messageActions.fetchMessages());
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  }, [dispatch, setIsLoading]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    loadUser();
+    loadMessages();
+    setIsLoading(false);
+  }, [dispatch, loadUser, loadMessages]);
 
   return (
     <View style={styles.screen}>
@@ -32,8 +57,13 @@ const HomeScreen = (props) => {
         ListEmptyComponent={<Text>KLOPT NIET</Text>}
         // contentContainerStyle={styles.listContainer}
         refreshing={refresh}
-        onRefresh={() => this.handleRefresh()} // Not yet working
+        onRefresh={loadMessages}
       />
+      {isLoading && (
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={COLORS.Foreground} />
+        </View>
+      )}
     </View>
   );
 };
@@ -71,6 +101,15 @@ const styles = StyleSheet.create({
     paddingTop: Config.deviceHeight * 0.003,
   },
   listContainer: {},
+  centered: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default HomeScreen;

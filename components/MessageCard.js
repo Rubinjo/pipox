@@ -29,10 +29,13 @@ class MessageCard extends Component {
           <View style={styles.infoSection}>
             <View style={styles.infoSection}>
               <Text style={styles.infoText}>
-                {this.props.message.reactions.length + " "}
+                {this.props.message.reactions
+                  ? this.props.message.reactions.length + " "
+                  : "0 "}
               </Text>
               <Entypo name="chat" size={17} color={COLORS.grey} />
             </View>
+
             <View style={styles.infoSection}>
               <Text style={styles.infoText}>
                 {this.props.message.likes + " "}

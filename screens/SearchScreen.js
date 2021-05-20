@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, FlatList, TextInput, Text, StyleSheet } from "react-native";
+import {
+  View,
+  FlatList,
+  TextInput,
+  Text,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import { useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 
@@ -8,20 +15,23 @@ import Config from "../components/Config";
 import MessageCard from "../components/MessageCard";
 
 const SearchScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [searchTerm, setSearchTerm] = useState(null);
   const [searchMessages, setSearchMessages] = useState([]);
 
-  const handleRefresh = () => {
-    setRefresh(true);
-  };
-
   const messages = useSelector((state) => state.messages.messages);
 
   const search = () => {
-    setSearchMessages(
-      messages.filter((message) => message.text.includes(searchTerm))
-    );
+    setIsLoading(true);
+    setRefresh(true);
+    if (searchTerm) {
+      setSearchMessages(
+        messages.filter((message) => message.text.includes(searchTerm))
+      );
+    }
+    setRefresh(false);
+    setIsLoading(false);
   };
 
   return (
@@ -49,8 +59,13 @@ const SearchScreen = (props) => {
         keyExtractor={(item) => item.id.toString()}
         // contentContainerStyle={styles.listContainer}
         refreshing={refresh}
-        onRefresh={() => this.handleRefresh()} // Not yet working
+        onRefresh={search}
       />
+      {isLoading && (
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={COLORS.Foreground} />
+        </View>
+      )}
     </View>
   );
 };
@@ -67,6 +82,15 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: COLORS.Background,
+  },
+  centered: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
   searchBar: {
     width: "95%",

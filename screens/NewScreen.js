@@ -6,23 +6,32 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 
 import COLORS from "../constants/colors";
 import Config from "../components/Config";
+import * as messageActions from "../store/actions/messages";
 
 const NewScreen = (props) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [postMessage, setPostMessage] = useState("");
 
-  const search = () => {
-    console.log(searchTerm);
+  const dispatch = useDispatch();
+
+  const post = async () => {
+    console.log(userId);
+    await dispatch(messageActions.addMessage(userId, postMessage));
+    setPostMessage("");
   };
+
+  const userId = useSelector((state) => state.user.user.id);
+
   return (
     <View style={styles.screen}>
       <View style={styles.searchBar}>
         <TextInput
           style={styles.searchInput}
-          onChangeText={(text) => setSearchTerm(text)}
-          value={searchTerm}
+          onChangeText={(text) => setPostMessage(text)}
+          value={postMessage}
           keyboardAppearance="dark"
           placeholder="Type here your message..."
           placeholderTextColor={COLORS.Foreground}
@@ -31,9 +40,13 @@ const NewScreen = (props) => {
         />
       </View>
       <View style={styles.counter}>
-        <Text style={styles.counterText}>250/{searchTerm.length}</Text>
+        <Text style={styles.counterText}>250/{postMessage.length}</Text>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          post();
+        }}
+      >
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Post</Text>
         </View>

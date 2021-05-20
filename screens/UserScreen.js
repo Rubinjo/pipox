@@ -9,12 +9,10 @@ import MessageCard from "../components/MessageCard";
 
 const UserScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
-
-  const handleRefresh = () => {
-    setRefresh(true);
-  };
-
-  const availableMessages = useSelector((state) => state.messages.messages);
+  const user = useSelector((state) => state.user.user);
+  const userMessages = useSelector((state) =>
+    state.messages.messages.some((message) => message.userId === user.id)
+  );
   return (
     <View style={styles.screen}>
       <View
@@ -92,7 +90,7 @@ const UserScreen = (props) => {
         </Pressable>
       </View>
       <FlatList
-        data={availableMessages}
+        data={userMessages}
         ListHeaderComponent={() => (
           <View
             style={{
