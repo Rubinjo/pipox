@@ -15,7 +15,6 @@ import Config from "../components/Config";
 import MessageCard from "../components/MessageCard";
 
 const SearchScreen = (props) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [searchTerm, setSearchTerm] = useState(null);
   const [searchMessages, setSearchMessages] = useState([]);
@@ -23,7 +22,6 @@ const SearchScreen = (props) => {
   const messages = useSelector((state) => state.messages.messages);
 
   const search = () => {
-    setIsLoading(true);
     setRefresh(true);
     if (searchTerm) {
       setSearchMessages(
@@ -31,7 +29,6 @@ const SearchScreen = (props) => {
       );
     }
     setRefresh(false);
-    setIsLoading(false);
   };
 
   return (
@@ -61,11 +58,6 @@ const SearchScreen = (props) => {
         refreshing={refresh}
         onRefresh={search}
       />
-      {isLoading && (
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color={COLORS.Foreground} />
-        </View>
-      )}
     </View>
   );
 };

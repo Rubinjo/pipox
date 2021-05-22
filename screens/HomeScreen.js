@@ -12,7 +12,6 @@ import * as userActions from "../store/actions/user";
 import * as messageActions from "../store/actions/messages";
 
 const HomeScreen = (props) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
   const availableMessages = useSelector((state) => state.messages.messages);
@@ -26,7 +25,7 @@ const HomeScreen = (props) => {
     } catch (err) {
       console.log(err);
     }
-  }, [dispatch, setIsLoading]);
+  }, [dispatch]);
 
   // Load all messages
   const loadMessages = useCallback(async () => {
@@ -37,13 +36,11 @@ const HomeScreen = (props) => {
       console.log(err);
     }
     setRefresh(false);
-  }, [dispatch, setIsLoading]);
+  }, [dispatch]);
 
   useEffect(() => {
-    setIsLoading(true);
     loadUser();
     loadMessages();
-    setIsLoading(false);
   }, [dispatch, loadUser, loadMessages]);
 
   return (
@@ -51,7 +48,12 @@ const HomeScreen = (props) => {
       <FlatList
         data={availableMessages}
         renderItem={(itemData) => (
-          <MessageCard navData={props.navigation} message={itemData.item} />
+          <MessageCard
+            navData={props.navigation}
+            message={itemData.item}
+            dispatch={dispatch}
+            loadMessages={loadMessages}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={<Text>KLOPT NIET</Text>}
@@ -59,11 +61,6 @@ const HomeScreen = (props) => {
         refreshing={refresh}
         onRefresh={loadMessages}
       />
-      {isLoading && (
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color={COLORS.Foreground} />
-        </View>
-      )}
     </View>
   );
 };

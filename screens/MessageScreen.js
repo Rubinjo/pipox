@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   FlatList,
@@ -7,26 +7,40 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 
 import MessageCard from "../components/MessageCard";
 import ReactionCard from "../components/ReactionCard";
 import COLORS from "../constants/colors";
 import Config from "../components/Config";
+import * as messageActions from "../store/actions/messages";
 
 const MessageScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
   const [postReaction, setPostReaction] = useState("");
 
-  const handleRefresh = () => {
-    setRefresh(true);
-  };
-
   const message = useSelector((state) => state.messages.messages[0]);
+  const dispatch = useDispatch();
+
+  // Load all messages
+  const loadMessages = useCallback(async () => {
+    setRefresh(true);
+    try {
+      await dispatch(messageActions.fetchMessages());
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  }, [dispatch]);
+
   return (
     <View style={styles.screen}>
-      <MessageCard message={message} />
+      <MessageCard
+        message={message}
+        dispatch={dispatch}
+        loadMessages={loadMessages}
+      />
       <View
         style={{
           width: "100%",
@@ -49,7 +63,7 @@ const MessageScreen = (props) => {
         }
         // contentContainerStyle={styles.listContainer}
         refreshing={refresh}
-        onRefresh={() => this.handleRefresh()} // Not yet working
+        onRefresh={loadMessages}
       />
       <View style={styles.counter}>
         <Text style={styles.counterText}>250/{postReaction.length}</Text>
