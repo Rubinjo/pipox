@@ -13,7 +13,7 @@ class MessageCard extends Component {
   }
 
   openMessage = (navData) => {
-    navData.navigate({ name: "Message" });
+    navData.navigate("Message", { message: this.props.message });
   };
 
   likeMessage = async () => {

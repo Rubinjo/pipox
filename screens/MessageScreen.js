@@ -20,7 +20,7 @@ const MessageScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
   const [postReactionText, setPostReactionText] = useState("");
 
-  const message = useSelector((state) => state.messages.messages[0]);
+  const message = props.route.params ? props.route.params.message : {};
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
