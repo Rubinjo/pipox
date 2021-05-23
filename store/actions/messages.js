@@ -1,8 +1,9 @@
 import Message from "../../models/message";
+import Reaction from "../../models/reaction";
 
 export const ADD_MESSAGE = "ADD_MESSAGE";
 export const SET_MESSAGE = "SET_MESSAGE";
-export const UPDATE_REACTION = "UPDATE_REACTION";
+export const ADD_REACTION = "ADD_REACTION";
 export const UPDATE_LIKES = "UPDATE_LIKES";
 export const UPDATE_DISLIKES = "UPDATE_DISLIKES";
 
@@ -85,7 +86,7 @@ export const addMessage = (userId, text) => {
   };
 };
 
-export const updateReactions = (id, userId, text) => {
+export const addReaction = (id, userId, text) => {
   const today = new Date();
   const min = String(today.getMinutes()).padStart(2, "0");
   const hh = String(today.getHours()).padStart(2, "0");
@@ -94,21 +95,26 @@ export const updateReactions = (id, userId, text) => {
   const yyyy = today.getFullYear();
   const time = hh + ":" + min;
   const date = dd + "/" + mm + "/" + yyyy;
-
-  const reactions = [];
+  const likes = 0;
+  const dislikes = 0;
 
   return async (dispatch) => {
     const response = await fetch(
       "https://rn-pipox-default-rtdb.europe-west1.firebasedatabase.app/messages/" +
         id +
-        ".json",
+        "/reactions.json",
       {
-        method: "PATCH",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          reactions,
+          userId,
+          text,
+          time,
+          date,
+          likes,
+          dislikes,
         }),
       }
     );
@@ -118,9 +124,15 @@ export const updateReactions = (id, userId, text) => {
     console.log(resData);
 
     dispatch({
-      type: UPDATE_REACTION,
-      message: {
-        reactions: reactions,
+      type: ADD_REACTION,
+      reaction: {
+        id: resData.name,
+        userId: userId,
+        text: text,
+        time: time,
+        date: date,
+        likes: likes,
+        dislikes: dislikes,
       },
     });
   };
@@ -155,6 +167,7 @@ export const updateLikes = (id, likes, add) => {
     dispatch({
       type: UPDATE_LIKES,
       message: {
+        id: id,
         likes: likes,
       },
     });
@@ -190,6 +203,7 @@ export const updateDislikes = (id, dislikes, add) => {
     dispatch({
       type: UPDATE_DISLIKES,
       message: {
+        id: id,
         dislikes: dislikes,
       },
     });

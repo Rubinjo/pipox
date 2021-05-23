@@ -42,7 +42,6 @@ class MessageCard extends Component {
         )
       );
     }
-    this.props.loadMessages();
   };
 
   dislikeMessage = async () => {
@@ -71,7 +70,6 @@ class MessageCard extends Component {
         )
       );
     }
-    this.props.loadMessages();
   };
 
   render() {

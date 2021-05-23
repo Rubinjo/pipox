@@ -18,7 +18,7 @@ import * as messageActions from "../store/actions/messages";
 
 const MessageScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
-  const [postReaction, setPostReaction] = useState("");
+  const [postReactionText, setPostReactionText] = useState("");
 
   const message = useSelector((state) => state.messages.messages[0]);
   const dispatch = useDispatch();
@@ -34,13 +34,18 @@ const MessageScreen = (props) => {
     setRefresh(false);
   }, [dispatch]);
 
+  const postReaction = async () => {
+    try {
+      await dispatch(messageActions.addReaction(id, userId, postReactionText)); //Not finished
+    } catch (err) {
+      console.log(err);
+    }
+    setPostReactionText("");
+  };
+
   return (
     <View style={styles.screen}>
-      <MessageCard
-        message={message}
-        dispatch={dispatch}
-        loadMessages={loadMessages}
-      />
+      <MessageCard message={message} dispatch={dispatch} />
       <View
         style={{
           width: "100%",
@@ -66,20 +71,20 @@ const MessageScreen = (props) => {
         onRefresh={loadMessages}
       />
       <View style={styles.counter}>
-        <Text style={styles.counterText}>250/{postReaction.length}</Text>
+        <Text style={styles.counterText}>250/{postReactionText.length}</Text>
       </View>
       <View style={styles.searchBar}>
         <TextInput
           style={styles.searchInput}
-          onChangeText={(text) => setPostReaction(text)}
-          value={postReaction}
+          onChangeText={(text) => setPostReactionText(text)}
+          value={postReactionText}
           keyboardAppearance="dark"
           placeholder="Add your reaction..."
           placeholderTextColor={COLORS.Foreground}
           multiline={true}
           returnKeyType="done"
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => postReaction()}>
           <Entypo
             name="arrow-with-circle-right"
             size={22 + Config.deviceHeight * 0.006}

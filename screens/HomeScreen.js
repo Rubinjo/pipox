@@ -52,7 +52,6 @@ const HomeScreen = (props) => {
             navData={props.navigation}
             message={itemData.item}
             dispatch={dispatch}
-            loadMessages={loadMessages}
           />
         )}
         keyExtractor={(item) => item.id.toString()}

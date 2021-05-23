@@ -42,11 +42,7 @@ const NewScreen = (props) => {
       <View style={styles.counter}>
         <Text style={styles.counterText}>250/{postMessage.length}</Text>
       </View>
-      <TouchableOpacity
-        onPress={() => {
-          post();
-        }}
-      >
+      <TouchableOpacity onPress={() => post()}>
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText}>Post</Text>
         </View>
