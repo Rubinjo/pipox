@@ -21,6 +21,7 @@ const MessageScreen = (props) => {
   const [postReactionText, setPostReactionText] = useState("");
 
   const message = useSelector((state) => state.messages.messages[0]);
+  const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
   // Load all messages
@@ -36,7 +37,9 @@ const MessageScreen = (props) => {
 
   const postReaction = async () => {
     try {
-      await dispatch(messageActions.addReaction(id, userId, postReactionText)); //Not finished
+      await dispatch(
+        messageActions.addReaction(message.id, user.id, postReactionText)
+      );
     } catch (err) {
       console.log(err);
     }
@@ -82,7 +85,7 @@ const MessageScreen = (props) => {
           placeholder="Add your reaction..."
           placeholderTextColor={COLORS.Foreground}
           multiline={true}
-          returnKeyType="done"
+          returnKeyType="send"
         />
         <TouchableOpacity onPress={() => postReaction()}>
           <Entypo

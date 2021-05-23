@@ -36,7 +36,7 @@ const NewScreen = (props) => {
           placeholder="Type here your message..."
           placeholderTextColor={COLORS.Foreground}
           multiline={true}
-          returnKeyType="done"
+          returnKeyType="send"
         />
       </View>
       <View style={styles.counter}>

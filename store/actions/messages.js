@@ -14,7 +14,21 @@ export const fetchMessages = () => {
     );
     const resData = await response.json();
     const loadedMessages = [];
+    let loadedReactions = [];
     for (const key in resData) {
+      for (const reaction in resData[key].reactions) {
+        loadedReactions.push(
+          new Reaction(
+            reaction,
+            resData[key].reactions[reaction].userId,
+            resData[key].reactions[reaction].text,
+            resData[key].reactions[reaction].time,
+            resData[key].reactions[reaction].date,
+            resData[key].reactions[reaction].likes,
+            resData[key].reactions[reaction].dislikes
+          )
+        );
+      }
       loadedMessages.push(
         new Message(
           key,
@@ -24,9 +38,10 @@ export const fetchMessages = () => {
           resData[key].date,
           resData[key].likes,
           resData[key].dislikes,
-          resData[key].reactions
+          loadedReactions
         )
       );
+      loadedReactions = [];
     }
 
     dispatch({ type: SET_MESSAGE, messages: loadedMessages });
@@ -126,6 +141,7 @@ export const addReaction = (id, userId, text) => {
     dispatch({
       type: ADD_REACTION,
       reaction: {
+        messageId: id,
         id: resData.name,
         userId: userId,
         text: text,

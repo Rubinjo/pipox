@@ -7,6 +7,7 @@ import {
   ADD_REACTION,
 } from "../actions/messages";
 import Message from "../../models/message";
+import Reaction from "../../models/reaction";
 
 const initialState = {
   messages: MESSAGES,
@@ -28,12 +29,32 @@ const messagesReducer = (state = initialState, action) => {
       );
       return { messages: state.messages.concat(newMessage) };
     case ADD_REACTION:
-      // NOT IMPLEMENTED
       const messageIndexReaction = state.messages.findIndex(
-        (message) => message.id === action.pid
+        (message) => message.id === action.reaction.messageId
       );
-      const updatedMessage = new Message(action.pid);
-      return null;
+      const updatedMessageReaction = new Message(
+        action.reaction.messageId,
+        state.messages[messageIndexReaction].userId,
+        state.messages[messageIndexReaction].text,
+        state.messages[messageIndexReaction].time,
+        state.messages[messageIndexReaction].date,
+        state.messages[messageIndexReaction].likes,
+        state.messages[messageIndexReaction].dislikes,
+        state.messages[messageIndexReaction].reactions.concat(
+          new Reaction(
+            action.reaction.id,
+            action.reaction.userId,
+            action.reaction.text,
+            action.reaction.time,
+            action.reaction.date,
+            action.reaction.likes,
+            action.reaction.dislikes
+          )
+        )
+      );
+      const updatedMessagesReaction = [...state.messages];
+      updatedMessagesReaction[messageIndexReaction] = updatedMessageReaction;
+      return { messages: updatedMessagesReaction };
     case UPDATE_LIKES:
       const messageIndexLike = state.messages.findIndex(
         (message) => message.id === action.message.id
