@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   FlatList,
@@ -20,7 +20,11 @@ const MessageScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
   const [postReactionText, setPostReactionText] = useState("");
 
-  const message = props.route.params ? props.route.params.message : {};
+  const messages = useSelector((state) => state.messages.messages);
+  const messageIndex = messages.findIndex(
+    (message) => message.id === props.route.params.messageId
+  );
+  const message = messages[messageIndex];
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
@@ -57,7 +61,13 @@ const MessageScreen = (props) => {
       />
       <FlatList
         data={message.reactions}
-        renderItem={(itemData) => <ReactionCard reaction={itemData.item} />}
+        renderItem={(itemData) => (
+          <ReactionCard
+            reaction={itemData.item}
+            dispatch={dispatch}
+            messageId={message.id}
+          />
+        )}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={
           <View

@@ -13,7 +13,9 @@ class MessageCard extends Component {
   }
 
   openMessage = (navData) => {
-    navData.navigate("Message", { message: this.props.message });
+    navData.navigate("Message", {
+      messageId: this.props.message.id,
+    });
   };
 
   likeMessage = async () => {
@@ -25,7 +27,7 @@ class MessageCard extends Component {
       this.setState({ likeColor: COLORS.green });
       // Add like
       await this.props.dispatch(
-        messageActions.updateLikes(
+        messageActions.updateLikesMessage(
           this.props.message.id,
           this.props.message.likes,
           true
@@ -35,7 +37,7 @@ class MessageCard extends Component {
       this.setState({ likeColor: COLORS.grey });
       // Delete like
       await this.props.dispatch(
-        messageActions.updateLikes(
+        messageActions.updateLikesMessage(
           this.props.message.id,
           this.props.message.likes,
           false
@@ -53,7 +55,7 @@ class MessageCard extends Component {
       this.setState({ dislikeColor: COLORS.PrimaryColorOn });
       // Add dislike
       await this.props.dispatch(
-        messageActions.updateDislikes(
+        messageActions.updateDislikesMessage(
           this.props.message.id,
           this.props.message.dislikes,
           true
@@ -63,7 +65,7 @@ class MessageCard extends Component {
       this.setState({ dislikeColor: COLORS.grey });
       // Delete dislike
       await this.props.dispatch(
-        messageActions.updateDislikes(
+        messageActions.updateDislikesMessage(
           this.props.message.id,
           this.props.message.dislikes,
           false

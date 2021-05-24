@@ -1,8 +1,10 @@
 import { MESSAGES } from "../../constants/dummy-data";
 import {
   ADD_MESSAGE,
-  UPDATE_LIKES,
-  UPDATE_DISLIKES,
+  UPDATE_LIKES_MESSAGE,
+  UPDATE_DISLIKES_MESSAGE,
+  UPDATE_LIKES_REACTION,
+  UPDATE_DISLIKES_REACTION,
   SET_MESSAGE,
   ADD_REACTION,
 } from "../actions/messages";
@@ -55,7 +57,7 @@ const messagesReducer = (state = initialState, action) => {
       const updatedMessagesReaction = [...state.messages];
       updatedMessagesReaction[messageIndexReaction] = updatedMessageReaction;
       return { messages: updatedMessagesReaction };
-    case UPDATE_LIKES:
+    case UPDATE_LIKES_MESSAGE:
       const messageIndexLike = state.messages.findIndex(
         (message) => message.id === action.message.id
       );
@@ -72,7 +74,7 @@ const messagesReducer = (state = initialState, action) => {
       const updatedMessagesLike = [...state.messages];
       updatedMessagesLike[messageIndexLike] = updatedMessageLike;
       return { messages: updatedMessagesLike };
-    case UPDATE_DISLIKES:
+    case UPDATE_DISLIKES_MESSAGE:
       const messageIndexDislike = state.messages.findIndex(
         (message) => message.id === action.message.id
       );
@@ -89,6 +91,70 @@ const messagesReducer = (state = initialState, action) => {
       const updatedMessagesDislike = [...state.messages];
       updatedMessagesDislike[messageIndexDislike] = updatedMessageDislike;
       return { messages: updatedMessagesDislike };
+    case UPDATE_LIKES_REACTION:
+      const messageReactionIndexLike = state.messages.findIndex(
+        (message) => message.id === action.reaction.messageId
+      );
+      const reactionIndexLike = state.messages[
+        messageReactionIndexLike
+      ].reactions.findIndex((reaction) => reaction.id === action.reaction.id);
+
+      const updatedReactionLike = new Reaction(
+        action.reaction.id,
+        state.messages[messageReactionIndexLike].reactions[
+          reactionIndexLike
+        ].userId,
+        state.messages[messageReactionIndexLike].reactions[
+          reactionIndexLike
+        ].text,
+        state.messages[messageReactionIndexLike].reactions[
+          reactionIndexLike
+        ].time,
+        state.messages[messageReactionIndexLike].reactions[
+          reactionIndexLike
+        ].date,
+        action.reaction.likes,
+        state.messages[messageReactionIndexLike].reactions[
+          reactionIndexLike
+        ].dislikes
+      );
+      const updatedMessagesAndReactionsLike = [...state.messages];
+      updatedMessagesAndReactionsLike[messageReactionIndexLike].reactions[
+        reactionIndexLike
+      ] = updatedReactionLike;
+      return { messages: updatedMessagesAndReactionsLike };
+    case UPDATE_DISLIKES_REACTION:
+      const messageReactionIndexDislike = state.messages.findIndex(
+        (message) => message.id === action.reaction.messageId
+      );
+      const reactionIndexDislike = state.messages[
+        messageReactionIndexDislike
+      ].reactions.findIndex((reaction) => reaction.id === action.reaction.id);
+
+      const updatedReactionDislike = new Reaction(
+        action.reaction.id,
+        state.messages[messageReactionIndexDislike].reactions[
+          reactionIndexDislike
+        ].userId,
+        state.messages[messageReactionIndexDislike].reactions[
+          reactionIndexDislike
+        ].text,
+        state.messages[messageReactionIndexDislike].reactions[
+          reactionIndexDislike
+        ].time,
+        state.messages[messageReactionIndexDislike].reactions[
+          reactionIndexDislike
+        ].date,
+        state.messages[messageReactionIndexDislike].reactions[
+          reactionIndexDislike
+        ].likes,
+        action.reaction.dislikes
+      );
+      const updatedMessagesAndReactionsDislike = [...state.messages];
+      updatedMessagesAndReactionsDislike[messageReactionIndexDislike].reactions[
+        reactionIndexDislike
+      ] = updatedReactionDislike;
+      return { messages: updatedMessagesAndReactionsDislike };
     default:
       return state;
   }

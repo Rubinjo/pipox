@@ -4,8 +4,10 @@ import Reaction from "../../models/reaction";
 export const ADD_MESSAGE = "ADD_MESSAGE";
 export const SET_MESSAGE = "SET_MESSAGE";
 export const ADD_REACTION = "ADD_REACTION";
-export const UPDATE_LIKES = "UPDATE_LIKES";
-export const UPDATE_DISLIKES = "UPDATE_DISLIKES";
+export const UPDATE_LIKES_MESSAGE = "UPDATE_LIKES_MESSAGE";
+export const UPDATE_DISLIKES_MESSAGE = "UPDATE_DISLIKES_MESSAGE";
+export const UPDATE_LIKES_REACTION = "UPDATE_LIKES_REACTION";
+export const UPDATE_DISLIKES_REACTION = "UPDATE_DISLIKES_REACTION";
 
 export const fetchMessages = () => {
   return async (dispatch) => {
@@ -154,7 +156,7 @@ export const addReaction = (id, userId, text) => {
   };
 };
 
-export const updateLikes = (id, likes, add) => {
+export const updateLikesMessage = (id, likes, add) => {
   if (add === true) {
     likes += 1;
   } else {
@@ -181,7 +183,7 @@ export const updateLikes = (id, likes, add) => {
     console.log(resData);
 
     dispatch({
-      type: UPDATE_LIKES,
+      type: UPDATE_LIKES_MESSAGE,
       message: {
         id: id,
         likes: likes,
@@ -190,7 +192,7 @@ export const updateLikes = (id, likes, add) => {
   };
 };
 
-export const updateDislikes = (id, dislikes, add) => {
+export const updateDislikesMessage = (id, dislikes, add) => {
   if (add === true) {
     dislikes += 1;
   } else {
@@ -217,8 +219,86 @@ export const updateDislikes = (id, dislikes, add) => {
     console.log(resData);
 
     dispatch({
-      type: UPDATE_DISLIKES,
+      type: UPDATE_DISLIKES_MESSAGE,
       message: {
+        id: id,
+        dislikes: dislikes,
+      },
+    });
+  };
+};
+
+export const updateLikesReaction = (messageId, id, likes, add) => {
+  if (add === true) {
+    likes += 1;
+  } else {
+    likes -= 1;
+  }
+  return async (dispatch) => {
+    const response = await fetch(
+      "https://rn-pipox-default-rtdb.europe-west1.firebasedatabase.app/messages/" +
+        messageId +
+        "/reactions/" +
+        id +
+        ".json",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          likes,
+        }),
+      }
+    );
+
+    const resData = await response.json();
+
+    console.log(resData);
+
+    dispatch({
+      type: UPDATE_LIKES_REACTION,
+      reaction: {
+        messageId: messageId,
+        id: id,
+        likes: likes,
+      },
+    });
+  };
+};
+
+export const updateDislikesReaction = (messageId, id, dislikes, add) => {
+  if (add === true) {
+    dislikes += 1;
+  } else {
+    dislikes -= 1;
+  }
+  return async (dispatch) => {
+    const response = await fetch(
+      "https://rn-pipox-default-rtdb.europe-west1.firebasedatabase.app/messages/" +
+        messageId +
+        "/reactions/" +
+        id +
+        ".json",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          dislikes,
+        }),
+      }
+    );
+
+    const resData = await response.json();
+
+    console.log(resData);
+
+    dispatch({
+      type: UPDATE_DISLIKES_REACTION,
+      reaction: {
+        messageId: messageId,
         id: id,
         dislikes: dislikes,
       },
