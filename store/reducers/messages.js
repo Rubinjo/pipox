@@ -24,10 +24,13 @@ const messagesReducer = (state = initialState, action) => {
         action.message.id,
         action.message.userId,
         action.message.text,
+        action.message.time,
         action.message.date,
         action.message.likes,
         action.message.dislikes,
-        action.message.reactions
+        action.message.reactions,
+        false,
+        false
       );
       return { messages: state.messages.concat(newMessage) };
     case ADD_REACTION:
@@ -50,7 +53,9 @@ const messagesReducer = (state = initialState, action) => {
             action.reaction.time,
             action.reaction.date,
             action.reaction.likes,
-            action.reaction.dislikes
+            action.reaction.dislikes,
+            false,
+            false
           )
         )
       );
