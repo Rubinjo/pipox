@@ -1,7 +1,15 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  Alert,
+} from "react-native";
 import { useSelector } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
+import { Restart } from "fiction-expo-restart";
 
 import COLORS from "../constants/colors";
 import Config from "../components/Config";
@@ -13,6 +21,27 @@ const UserScreen = (props) => {
   const userMessages = useSelector((state) =>
     state.messages.messages.some((message) => message.userId === user.id)
   );
+
+  const reload = () => {
+    Alert.alert(
+      "Restart App",
+      "Do you want to restart the app and get a new user id? Your previous messages will not be deleted but you are no longer associated with them.",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            console.log("OK Pressed");
+            Restart();
+          },
+        },
+      ]
+    );
+  };
   return (
     <View style={styles.screen}>
       <View
@@ -67,7 +96,7 @@ const UserScreen = (props) => {
           <Text style={{ color: COLORS.grey }}>Likes: 10</Text>
         </Pressable>
         <Pressable
-          onPress={() => {}}
+          onPress={() => reload()}
           android_ripple={{
             color: COLORS.white,
             borderless: false,
