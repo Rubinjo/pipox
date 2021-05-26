@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
   StyleSheet,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -40,14 +41,22 @@ const MessageScreen = (props) => {
   }, [dispatch]);
 
   const postReaction = async () => {
-    try {
-      await dispatch(
-        messageActions.addReaction(message.id, user.id, postReactionText)
+    if (postReactionText.length <= 250) {
+      try {
+        await dispatch(
+          messageActions.addReaction(message.id, user.id, postReactionText)
+        );
+      } catch (err) {
+        console.log(err);
+      }
+      setPostReactionText("");
+    } else {
+      Alert.alert(
+        "Reaction too long",
+        "Your reaction exceeds the limit of 250 characters, please shorten your reaction.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
       );
-    } catch (err) {
-      console.log(err);
     }
-    setPostReactionText("");
   };
 
   return (

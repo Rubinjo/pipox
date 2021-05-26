@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
   StyleSheet,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,9 +19,16 @@ const NewScreen = (props) => {
   const dispatch = useDispatch();
 
   const post = async () => {
-    console.log(userId);
-    await dispatch(messageActions.addMessage(userId, postMessage));
-    setPostMessage("");
+    if (postMessage.length <= 250) {
+      await dispatch(messageActions.addMessage(userId, postMessage));
+      setPostMessage("");
+    } else {
+      Alert.alert(
+        "Message too long",
+        "Your message exceeds the limit of 250 characters, please shorten your message.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      );
+    }
   };
 
   const userId = useSelector((state) => state.user.user.id);
