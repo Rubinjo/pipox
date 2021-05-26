@@ -1,5 +1,15 @@
 class Reaction {
-  constructor(id, userId, text, time, date, likes, dislikes) {
+  constructor(
+    id,
+    userId,
+    text,
+    time,
+    date,
+    likes,
+    dislikes,
+    likeActivated,
+    dislikeActivated
+  ) {
     this.id = id;
     this.userId = userId;
     this.text = text;
@@ -7,6 +17,8 @@ class Reaction {
     this.date = date;
     this.likes = likes;
     this.dislikes = dislikes;
+    this.likeActivated = likeActivated;
+    this.dislikeActivated = dislikeActivated;
   }
 }
 

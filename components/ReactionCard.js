@@ -9,16 +9,15 @@ import * as messageActions from "../store/actions/messages";
 class ReactionCard extends Component {
   constructor(props) {
     super(props);
-    this.state = { likeColor: COLORS.grey, dislikeColor: COLORS.grey };
   }
 
-  likeMessage = async () => {
-    if (this.state.likeColor === COLORS.grey) {
-      // Check if message is already disliked
-      if (this.state.dislikeColor === COLORS.PrimaryColorOn) {
-        await this.dislikeMessage();
+  likeReaction = async () => {
+    // Check if reaction is not already liked
+    if (!this.props.reaction.likeActivated) {
+      // Check if reaction is already disliked
+      if (this.props.reaction.dislikeActivated) {
+        await this.dislikeReaction();
       }
-      this.setState({ likeColor: COLORS.green });
       // Add like
       await this.props.dispatch(
         messageActions.updateLikesReaction(
@@ -29,7 +28,6 @@ class ReactionCard extends Component {
         )
       );
     } else {
-      this.setState({ likeColor: COLORS.grey });
       // Delete like
       await this.props.dispatch(
         messageActions.updateLikesReaction(
@@ -42,13 +40,13 @@ class ReactionCard extends Component {
     }
   };
 
-  dislikeMessage = async () => {
-    if (this.state.dislikeColor === COLORS.grey) {
-      // Check if message is already liked
-      if (this.state.likeColor === COLORS.green) {
-        await this.likeMessage();
+  dislikeReaction = async () => {
+    // Check if reaction is not already disliked
+    if (!this.props.reaction.dislikeActivated) {
+      // Check if reaction is already liked
+      if (this.props.reaction.likeActivated) {
+        await this.likeReaction();
       }
-      this.setState({ dislikeColor: COLORS.PrimaryColorOn });
       // Add dislike
       await this.props.dispatch(
         messageActions.updateDislikesReaction(
@@ -59,7 +57,6 @@ class ReactionCard extends Component {
         )
       );
     } else {
-      this.setState({ dislikeColor: COLORS.grey });
       // Delete dislike
       await this.props.dispatch(
         messageActions.updateDislikesReaction(
@@ -78,16 +75,22 @@ class ReactionCard extends Component {
         <Text style={styles.messageText}>{this.props.reaction.text}</Text>
         <View style={styles.infoSection}>
           <TouchableOpacity
-            onPress={this.likeMessage}
+            onPress={this.likeReaction}
             style={styles.infoSection}
           >
             <Text style={styles.infoText}>
               {this.props.reaction.likes + " "}
             </Text>
-            <Entypo name="thumbs-up" size={17} color={this.state.likeColor} />
+            <Entypo
+              name="thumbs-up"
+              size={17}
+              color={
+                this.props.reaction.likeActivated ? COLORS.green : COLORS.grey
+              }
+            />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={this.dislikeMessage}
+            onPress={this.dislikeReaction}
             style={styles.infoSection}
           >
             <Text style={styles.infoText}>
@@ -96,7 +99,11 @@ class ReactionCard extends Component {
             <Entypo
               name="thumbs-down"
               size={17}
-              color={this.state.dislikeColor}
+              color={
+                this.props.reaction.dislikeActivated
+                  ? COLORS.PrimaryColorOn
+                  : COLORS.grey
+              }
             />
           </TouchableOpacity>
           <View style={styles.infoSection}>

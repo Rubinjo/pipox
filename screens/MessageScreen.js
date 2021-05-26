@@ -32,7 +32,7 @@ const MessageScreen = (props) => {
   const loadMessages = useCallback(async () => {
     setRefresh(true);
     try {
-      await dispatch(messageActions.fetchMessages());
+      await dispatch(messageActions.fetchMessages(messages));
     } catch (err) {
       console.log(err);
     }

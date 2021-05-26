@@ -9,7 +9,7 @@ export const UPDATE_DISLIKES_MESSAGE = "UPDATE_DISLIKES_MESSAGE";
 export const UPDATE_LIKES_REACTION = "UPDATE_LIKES_REACTION";
 export const UPDATE_DISLIKES_REACTION = "UPDATE_DISLIKES_REACTION";
 
-export const fetchMessages = () => {
+export const fetchMessagesFirst = () => {
   return async (dispatch) => {
     const response = await fetch(
       "https://rn-pipox-default-rtdb.europe-west1.firebasedatabase.app/messages.json"
@@ -27,7 +27,9 @@ export const fetchMessages = () => {
             resData[key].reactions[reaction].time,
             resData[key].reactions[reaction].date,
             resData[key].reactions[reaction].likes,
-            resData[key].reactions[reaction].dislikes
+            resData[key].reactions[reaction].dislikes,
+            false,
+            false
           )
         );
       }
@@ -40,7 +42,79 @@ export const fetchMessages = () => {
           resData[key].date,
           resData[key].likes,
           resData[key].dislikes,
-          loadedReactions
+          loadedReactions,
+          false,
+          false
+        )
+      );
+      loadedReactions = [];
+    }
+
+    dispatch({ type: SET_MESSAGE, messages: loadedMessages });
+  };
+};
+
+export const fetchMessages = (messages) => {
+  return async (dispatch) => {
+    const response = await fetch(
+      "https://rn-pipox-default-rtdb.europe-west1.firebasedatabase.app/messages.json"
+    );
+    const resData = await response.json();
+    const loadedMessages = [];
+    let loadedReactions = [];
+    let likeActivatedReaction = false;
+    let dislikeActivatedReaction = false;
+    let likeActivatedMessage = false;
+    let dislikeActivatedMessage = false;
+    for (const key in resData) {
+      const messageIndex = messages.findIndex((message) => message.id === key);
+      for (const reactionKey in resData[key].reactions) {
+        console.log(key);
+        try {
+          const reactionIndex = messages[messageIndex].reactions.findIndex(
+            (reaction) => reaction.id === reactionKey
+          );
+          likeActivatedReaction =
+            messages[messageIndex].reactions[reactionIndex].likeActivated;
+          dislikeActivatedReaction =
+            messages[messageIndex].reactions[reactionIndex].likeActivated;
+        } catch {
+          likeActivatedReaction = false;
+          dislikeActivatedReaction = false;
+        }
+        loadedReactions.push(
+          new Reaction(
+            reactionKey,
+            resData[key].reactions[reactionKey].userId,
+            resData[key].reactions[reactionKey].text,
+            resData[key].reactions[reactionKey].time,
+            resData[key].reactions[reactionKey].date,
+            resData[key].reactions[reactionKey].likes,
+            resData[key].reactions[reactionKey].dislikes,
+            likeActivatedReaction,
+            dislikeActivatedReaction
+          )
+        );
+      }
+      try {
+        likeActivatedMessage = messages[messageIndex].likeActivated;
+        dislikeActivatedMessage = messages[messageIndex].dislikeActivated;
+      } catch {
+        likeActivatedMessage = false;
+        dislikeActivatedMessage = false;
+      }
+      loadedMessages.push(
+        new Message(
+          key,
+          resData[key].userId,
+          resData[key].text,
+          resData[key].time,
+          resData[key].date,
+          resData[key].likes,
+          resData[key].dislikes,
+          loadedReactions,
+          likeActivatedMessage,
+          dislikeActivatedMessage
         )
       );
       loadedReactions = [];
@@ -187,6 +261,7 @@ export const updateLikesMessage = (id, likes, add) => {
       message: {
         id: id,
         likes: likes,
+        likeActivated: add,
       },
     });
   };
@@ -223,6 +298,7 @@ export const updateDislikesMessage = (id, dislikes, add) => {
       message: {
         id: id,
         dislikes: dislikes,
+        dislikeActivated: add,
       },
     });
   };
@@ -262,6 +338,7 @@ export const updateLikesReaction = (messageId, id, likes, add) => {
         messageId: messageId,
         id: id,
         likes: likes,
+        likeActivated: add,
       },
     });
   };
@@ -301,6 +378,7 @@ export const updateDislikesReaction = (messageId, id, dislikes, add) => {
         messageId: messageId,
         id: id,
         dislikes: dislikes,
+        dislikeActivated: add,
       },
     });
   };

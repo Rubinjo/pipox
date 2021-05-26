@@ -69,7 +69,9 @@ const messagesReducer = (state = initialState, action) => {
         state.messages[messageIndexLike].date,
         action.message.likes,
         state.messages[messageIndexLike].dislikes,
-        state.messages[messageIndexLike].reactions
+        state.messages[messageIndexLike].reactions,
+        action.message.likeActivated,
+        state.messages[messageIndexLike].dislikeActivated
       );
       const updatedMessagesLike = [...state.messages];
       updatedMessagesLike[messageIndexLike] = updatedMessageLike;
@@ -86,7 +88,9 @@ const messagesReducer = (state = initialState, action) => {
         state.messages[messageIndexDislike].date,
         state.messages[messageIndexDislike].likes,
         action.message.dislikes,
-        state.messages[messageIndexDislike].reactions
+        state.messages[messageIndexDislike].reactions,
+        state.messages[messageIndexDislike].likeActivated,
+        action.message.dislikeActivated
       );
       const updatedMessagesDislike = [...state.messages];
       updatedMessagesDislike[messageIndexDislike] = updatedMessageDislike;
@@ -116,7 +120,11 @@ const messagesReducer = (state = initialState, action) => {
         action.reaction.likes,
         state.messages[messageReactionIndexLike].reactions[
           reactionIndexLike
-        ].dislikes
+        ].dislikes,
+        action.reaction.likeActivated,
+        state.messages[messageReactionIndexLike].reactions[
+          reactionIndexLike
+        ].dislikeActivated
       );
       const updatedMessagesAndReactionsLike = [...state.messages];
       updatedMessagesAndReactionsLike[messageReactionIndexLike].reactions[
@@ -148,7 +156,11 @@ const messagesReducer = (state = initialState, action) => {
         state.messages[messageReactionIndexDislike].reactions[
           reactionIndexDislike
         ].likes,
-        action.reaction.dislikes
+        action.reaction.dislikes,
+        state.messages[messageReactionIndexDislike].reactions[
+          reactionIndexDislike
+        ].likeActivated,
+        action.reaction.dislikeActivated
       );
       const updatedMessagesAndReactionsDislike = [...state.messages];
       updatedMessagesAndReactionsDislike[messageReactionIndexDislike].reactions[

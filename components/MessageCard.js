@@ -9,7 +9,6 @@ import * as messageActions from "../store/actions/messages";
 class MessageCard extends Component {
   constructor(props) {
     super(props);
-    this.state = { likeColor: COLORS.grey, dislikeColor: COLORS.grey };
   }
 
   openMessage = (navData) => {
@@ -19,12 +18,12 @@ class MessageCard extends Component {
   };
 
   likeMessage = async () => {
-    if (this.state.likeColor === COLORS.grey) {
+    // Check if message is not already liked
+    if (!this.props.message.likeActivated) {
       // Check if message is already disliked
-      if (this.state.dislikeColor === COLORS.PrimaryColorOn) {
+      if (this.props.message.dislikeActivated) {
         await this.dislikeMessage();
       }
-      this.setState({ likeColor: COLORS.green });
       // Add like
       await this.props.dispatch(
         messageActions.updateLikesMessage(
@@ -34,7 +33,6 @@ class MessageCard extends Component {
         )
       );
     } else {
-      this.setState({ likeColor: COLORS.grey });
       // Delete like
       await this.props.dispatch(
         messageActions.updateLikesMessage(
@@ -47,12 +45,12 @@ class MessageCard extends Component {
   };
 
   dislikeMessage = async () => {
-    if (this.state.dislikeColor === COLORS.grey) {
+    // Check if message is not already disliked
+    if (!this.props.message.dislikeActivated) {
       // Check if message is already liked
-      if (this.state.likeColor === COLORS.green) {
+      if (this.props.message.likeActivated) {
         await this.likeMessage();
       }
-      this.setState({ dislikeColor: COLORS.PrimaryColorOn });
       // Add dislike
       await this.props.dispatch(
         messageActions.updateDislikesMessage(
@@ -62,7 +60,6 @@ class MessageCard extends Component {
         )
       );
     } else {
-      this.setState({ dislikeColor: COLORS.grey });
       // Delete dislike
       await this.props.dispatch(
         messageActions.updateDislikesMessage(
@@ -102,7 +99,13 @@ class MessageCard extends Component {
               <Text style={styles.infoText}>
                 {this.props.message.likes + " "}
               </Text>
-              <Entypo name="thumbs-up" size={17} color={this.state.likeColor} />
+              <Entypo
+                name="thumbs-up"
+                size={17}
+                color={
+                  this.props.message.likeActivated ? COLORS.green : COLORS.grey
+                }
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={this.dislikeMessage}
@@ -114,7 +117,11 @@ class MessageCard extends Component {
               <Entypo
                 name="thumbs-down"
                 size={17}
-                color={this.state.dislikeColor}
+                color={
+                  this.props.message.dislikeActivated
+                    ? COLORS.PrimaryColorOn
+                    : COLORS.grey
+                }
               />
             </TouchableOpacity>
             <View style={styles.infoSection}>

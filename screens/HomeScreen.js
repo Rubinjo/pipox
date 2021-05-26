@@ -27,11 +27,22 @@ const HomeScreen = (props) => {
     }
   }, [dispatch]);
 
+  // Load all messages for the first time
+  const loadMessagesFirst = useCallback(async () => {
+    setRefresh(true);
+    try {
+      await dispatch(messageActions.fetchMessagesFirst());
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  }, [dispatch]);
+
   // Load all messages
   const loadMessages = useCallback(async () => {
     setRefresh(true);
     try {
-      await dispatch(messageActions.fetchMessages());
+      await dispatch(messageActions.fetchMessages(availableMessages));
     } catch (err) {
       console.log(err);
     }
@@ -40,7 +51,7 @@ const HomeScreen = (props) => {
 
   useEffect(() => {
     loadUser();
-    loadMessages();
+    loadMessagesFirst();
   }, [dispatch, loadUser, loadMessages]);
 
   return (
