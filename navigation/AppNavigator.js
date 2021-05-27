@@ -18,6 +18,7 @@ import UserScreen, {
 
 import MessageScreen from "../screens/MessageScreen";
 import NewScreen from "../screens/NewScreen";
+import ResponseScreen from "../screens/ResponseScreen";
 
 import COLORS from "../constants/colors";
 
@@ -74,6 +75,7 @@ const UserStackNav = (props) => {
     <UserStack.Navigator screenOptions={defaultStackOptions}>
       <UserStack.Screen name="User" component={UserScreen} />
       <UserStack.Screen name="Message" component={MessageScreen} />
+      <UserStack.Screen name="Responses" component={ResponseScreen} />
     </UserStack.Navigator>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   FlatList,
   Alert,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 import { Restart } from "fiction-expo-restart";
 
@@ -21,6 +21,19 @@ const UserScreen = (props) => {
   const userMessages = useSelector((state) =>
     state.messages.messages.filter((message) => message.userId == user.id)
   );
+
+  const dispatch = useDispatch();
+
+  // Load all user messages
+  const loadMessages = useCallback(async () => {
+    setRefresh(true);
+    try {
+      await dispatch(messageActions.fetchMessages(availableMessages));
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  }, [dispatch]);
 
   const reload = () => {
     Alert.alert(
@@ -42,6 +55,11 @@ const UserScreen = (props) => {
       ]
     );
   };
+
+  const openResponse = () => {
+    props.navigation.navigate("Responses");
+  };
+
   return (
     <View style={styles.screen}>
       <View
@@ -52,17 +70,17 @@ const UserScreen = (props) => {
         }}
       >
         <Pressable
-          onPress={() => {}}
+          onPress={() => openResponse()}
           android_ripple={{
             color: COLORS.white,
             borderless: false,
-            radius: 60,
+            radius: 64,
           }}
           style={({ pressed }) => [
             {
               backgroundColor: COLORS.Foreground,
               borderRadius: 8,
-              width: Config.deviceWidth * 0.22,
+              width: Config.deviceWidth * 0.25,
               height: Config.deviceHeight * 0.12,
               justifyContent: "center",
               alignItems: "center",
@@ -71,42 +89,21 @@ const UserScreen = (props) => {
           ]}
         >
           <Entypo name="chat" size={48} color={COLORS.PrimaryColorOn} />
-          <Text style={{ color: COLORS.grey }}>Respons</Text>
+          <Text style={{ color: COLORS.grey }}>Responses</Text>
         </Pressable>
-        <Pressable
-          onPress={() => {}}
-          android_ripple={{
-            color: COLORS.white,
-            borderless: false,
-            radius: 60,
-          }}
-          style={({ pressed }) => [
-            {
-              backgroundColor: COLORS.Foreground,
-              borderRadius: 8,
-              width: Config.deviceWidth * 0.22,
-              height: Config.deviceHeight * 0.12,
-              justifyContent: "center",
-              alignItems: "center",
-              elevation: 3,
-            },
-          ]}
-        >
-          <Entypo name="thumbs-up" size={48} color={COLORS.PrimaryColorOn} />
-          <Text style={{ color: COLORS.grey }}>Likes: 10</Text>
-        </Pressable>
+
         <Pressable
           onPress={() => reload()}
           android_ripple={{
             color: COLORS.white,
             borderless: false,
-            radius: 60,
+            radius: 64,
           }}
           style={({ pressed }) => [
             {
               backgroundColor: COLORS.Foreground,
               borderRadius: 8,
-              width: Config.deviceWidth * 0.22,
+              width: Config.deviceWidth * 0.25,
               height: Config.deviceHeight * 0.12,
               justifyContent: "center",
               alignItems: "center",
@@ -117,6 +114,30 @@ const UserScreen = (props) => {
           <Entypo name="cycle" size={48} color={COLORS.PrimaryColorOn} />
           <Text style={{ color: COLORS.grey }}>Reload</Text>
         </Pressable>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          marginVertical: Config.deviceHeight * 0.01,
+        }}
+      >
+        <Text style={{ color: COLORS.grey }}>
+          Reactions:{" "}
+          {userMessages.length > 0
+            ? userMessages
+                .map((message) => message.reactions.length)
+                .reduce((a, b) => a + b, 0)
+            : 0}
+        </Text>
+        <Text style={{ color: COLORS.grey }}>
+          Likes:{" "}
+          {userMessages.length > 0
+            ? userMessages
+                .map((message) => message.likes)
+                .reduce((a, b) => a + b, 0)
+            : 0}
+        </Text>
       </View>
       <FlatList
         data={userMessages}
@@ -135,13 +156,28 @@ const UserScreen = (props) => {
           </View>
         )}
         renderItem={(itemData) => (
-          <MessageCard navData={props.navigation} message={itemData.item} />
+          <MessageCard
+            navData={props.navigation}
+            dispatch={dispatch}
+            message={itemData.item}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={<Text>KLOPT NIET</Text>}
+        ListEmptyComponent={
+          <View
+            style={{
+              alignItems: "center",
+              marginTop: Config.deviceHeight * 0.02,
+            }}
+          >
+            <Text style={{ color: COLORS.grey }}>
+              You have not posted a message yet.
+            </Text>
+          </View>
+        }
         // contentContainerStyle={styles.listContainer}
         refreshing={refresh}
-        onRefresh={() => this.handleRefresh()} // Not yet working
+        onRefresh={loadMessages}
       />
     </View>
   );
