@@ -1,13 +1,6 @@
 import React, { useState } from "react";
-import {
-  View,
-  FlatList,
-  TextInput,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
-import { useSelector } from "react-redux";
+import { View, FlatList, TextInput, Text, StyleSheet } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import { Entypo } from "@expo/vector-icons";
 
 import COLORS from "../constants/colors";
@@ -16,17 +9,21 @@ import MessageCard from "../components/MessageCard";
 
 const SearchScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
+  const [searchInput, setSearchInput] = useState(null);
   const [searchTerm, setSearchTerm] = useState(null);
-  const [searchMessages, setSearchMessages] = useState([]);
 
-  const messages = useSelector((state) => state.messages.messages);
+  const dispatch = useDispatch();
+
+  let messages = useSelector((state) =>
+    state.messages.messages.filter((message) =>
+      message.text.includes(searchTerm)
+    )
+  );
 
   const search = () => {
     setRefresh(true);
-    if (searchTerm) {
-      setSearchMessages(
-        messages.filter((message) => message.text.includes(searchTerm))
-      );
+    if (searchInput) {
+      setSearchTerm(searchInput);
     }
     setRefresh(false);
   };
@@ -37,8 +34,8 @@ const SearchScreen = (props) => {
         <Entypo name="magnifying-glass" size={22} color={COLORS.Foreground} />
         <TextInput
           style={styles.searchInput}
-          onChangeText={(text) => setSearchTerm(text)}
-          value={searchTerm}
+          onChangeText={(text) => setSearchInput(text)}
+          value={searchInput}
           keyboardAppearance="dark"
           placeholder="Search"
           placeholderTextColor={COLORS.Foreground}
@@ -49,9 +46,13 @@ const SearchScreen = (props) => {
         />
       </View>
       <FlatList
-        data={searchMessages}
+        data={messages}
         renderItem={(itemData) => (
-          <MessageCard navData={props.navigation} message={itemData.item} />
+          <MessageCard
+            navData={props.navigation}
+            dispatch={dispatch}
+            message={itemData.item}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
         // contentContainerStyle={styles.listContainer}
