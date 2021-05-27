@@ -19,7 +19,7 @@ const UserScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
   const user = useSelector((state) => state.user.user);
   const userMessages = useSelector((state) =>
-    state.messages.messages.some((message) => message.userId === user.id)
+    state.messages.messages.filter((message) => message.userId == user.id)
   );
 
   const reload = () => {
@@ -134,7 +134,9 @@ const UserScreen = (props) => {
             <Entypo name="chevron-down" size={16} color={COLORS.white} />
           </View>
         )}
-        renderItem={(itemData) => <MessageCard message={itemData.item} />}
+        renderItem={(itemData) => (
+          <MessageCard navData={props.navigation} message={itemData.item} />
+        )}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={<Text>KLOPT NIET</Text>}
         // contentContainerStyle={styles.listContainer}
