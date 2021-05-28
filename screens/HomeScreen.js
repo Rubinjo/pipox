@@ -14,7 +14,9 @@ import * as messageActions from "../store/actions/messages";
 const HomeScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
 
+  // Load all messages from the redux store
   const availableMessages = useSelector((state) => state.messages.messages);
+
   const dispatch = useDispatch();
 
   // Create new user

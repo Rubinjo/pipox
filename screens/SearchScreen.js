@@ -14,12 +14,15 @@ const SearchScreen = (props) => {
 
   const dispatch = useDispatch();
 
+  // Load messages from the redux store where the text includes the search term
   let messages = useSelector((state) =>
     state.messages.messages.filter((message) =>
       message.text.includes(searchTerm)
     )
   );
 
+  // Search for messages that include a given search term
+  // Causes reload of the messages variable
   const search = () => {
     setRefresh(true);
     if (searchInput) {

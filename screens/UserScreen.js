@@ -17,6 +17,8 @@ import MessageCard from "../components/MessageCard";
 
 const UserScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
+
+  // Load current user details from the redux store
   const user = useSelector((state) => state.user.user);
   const userMessages = useSelector((state) =>
     state.messages.messages.filter((message) => message.userId == user.id)
@@ -35,6 +37,7 @@ const UserScreen = (props) => {
     setRefresh(false);
   }, [dispatch]);
 
+  // Reload complete application
   const reload = () => {
     Alert.alert(
       "Restart App",
@@ -56,6 +59,7 @@ const UserScreen = (props) => {
     );
   };
 
+  // Open response screen
   const openResponse = () => {
     props.navigation.navigate("Responses");
   };

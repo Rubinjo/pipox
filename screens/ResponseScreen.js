@@ -10,8 +10,10 @@ import * as messageActions from "../store/actions/messages";
 const ResponseScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
 
+  // Load current user details from the redux store
   const user = useSelector((state) => state.user.user);
 
+  // Load messages from the redux store where the current user has published a response on
   const availableMessages = useSelector((state) =>
     state.messages.messages.filter((message) =>
       message.reactions.some((reaction) => reaction.userId === user.id)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   FlatList,
@@ -21,11 +21,16 @@ const MessageScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
   const [postReactionText, setPostReactionText] = useState("");
 
+  // Load all messages from the redux store
   const messages = useSelector((state) => state.messages.messages);
+
+  // Select message that corrosponds to the messageId provided
   const messageIndex = messages.findIndex(
     (message) => message.id === props.route.params.messageId
   );
   const message = messages[messageIndex];
+
+  // Load current user details from the redux store
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
 
@@ -40,6 +45,8 @@ const MessageScreen = (props) => {
     setRefresh(false);
   }, [dispatch]);
 
+  // Post a reaction on a message
+  // Alters firebase & redux store
   const postReaction = async () => {
     if (postReactionText.length <= 250) {
       try {

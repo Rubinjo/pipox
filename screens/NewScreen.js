@@ -16,8 +16,13 @@ import * as messageActions from "../store/actions/messages";
 const NewScreen = (props) => {
   const [postMessage, setPostMessage] = useState("");
 
+  // Load current user id from the redux store
+  const userId = useSelector((state) => state.user.user.id);
+
   const dispatch = useDispatch();
 
+  // Post a new message
+  // Alters firebase & redux store
   const post = async () => {
     if (postMessage.length <= 250) {
       await dispatch(messageActions.addMessage(userId, postMessage));
@@ -30,8 +35,6 @@ const NewScreen = (props) => {
       );
     }
   };
-
-  const userId = useSelector((state) => state.user.user.id);
 
   return (
     <View style={styles.screen}>
