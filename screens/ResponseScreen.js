@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { View, FlatList, Text, Button, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { Entypo } from "@expo/vector-icons";
 
 import MessageCard from "../components/MessageCard";
 import COLORS from "../constants/colors";
@@ -12,6 +11,7 @@ const ResponseScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
 
   const user = useSelector((state) => state.user.user);
+
   const availableMessages = useSelector((state) =>
     state.messages.messages.filter((message) =>
       message.reactions.some((reaction) => reaction.userId === user.id)
@@ -43,7 +43,16 @@ const ResponseScreen = (props) => {
           />
         )}
         keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={<Text>KLOPT NIET</Text>}
+        ListEmptyComponent={
+          <View
+            style={{
+              alignItems: "center",
+              marginTop: Config.deviceHeight * 0.02,
+            }}
+          >
+            <Text>You have not responded to a message yet.</Text>
+          </View>
+        }
         // contentContainerStyle={styles.listContainer}
         refreshing={refresh}
         onRefresh={loadMessages}

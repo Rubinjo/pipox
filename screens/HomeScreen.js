@@ -66,7 +66,16 @@ const HomeScreen = (props) => {
           />
         )}
         keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={<Text>KLOPT NIET</Text>}
+        ListEmptyComponent={
+          <View
+            style={{
+              alignItems: "center",
+              marginTop: Config.deviceHeight * 0.02,
+            }}
+          >
+            <Text>No messages have been published yet.</Text>
+          </View>
+        }
         // contentContainerStyle={styles.listContainer}
         refreshing={refresh}
         onRefresh={loadMessages}
