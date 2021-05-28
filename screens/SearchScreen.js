@@ -79,15 +79,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.Background,
   },
-  centered: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   searchBar: {
     width: "95%",
     alignSelf: "center",

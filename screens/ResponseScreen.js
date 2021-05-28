@@ -9,6 +9,7 @@ import * as messageActions from "../store/actions/messages";
 
 const ResponseScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
+  const [error, setError] = useState();
 
   // Load current user details from the redux store
   const user = useSelector((state) => state.user.user);
@@ -24,14 +25,35 @@ const ResponseScreen = (props) => {
 
   // Load all messages
   const loadMessages = useCallback(async () => {
+    setError(null);
     setRefresh(true);
     try {
       await dispatch(messageActions.fetchMessages(availableMessages));
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
     setRefresh(false);
-  }, [dispatch]);
+  }, [dispatch, setError]);
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text
+          style={{
+            color: COLORS.white,
+            paddingBottom: Config.deviceHeight * 0.01,
+          }}
+        >
+          An error occurred!
+        </Text>
+        <Button
+          title="Try again"
+          onPress={loadMessages}
+          color={COLORS.PrimaryColorOn}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>

@@ -19,6 +19,7 @@ import * as messageActions from "../store/actions/messages";
 
 const MessageScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
+  const [error, setError] = useState();
   const [postReactionText, setPostReactionText] = useState("");
 
   // Load all messages from the redux store
@@ -36,14 +37,15 @@ const MessageScreen = (props) => {
 
   // Load all messages
   const loadMessages = useCallback(async () => {
+    setError(null);
     setRefresh(true);
     try {
       await dispatch(messageActions.fetchMessages(messages));
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
     setRefresh(false);
-  }, [dispatch]);
+  }, [dispatch, setError]);
 
   // Post a reaction on a message
   // Alters firebase & redux store
@@ -54,7 +56,7 @@ const MessageScreen = (props) => {
           messageActions.addReaction(message.id, user.id, postReactionText)
         );
       } catch (err) {
-        console.log(err);
+        setError(err.message);
       }
       setPostReactionText("");
     } else {
@@ -65,6 +67,26 @@ const MessageScreen = (props) => {
       );
     }
   };
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text
+          style={{
+            color: COLORS.white,
+            paddingBottom: Config.deviceHeight * 0.01,
+          }}
+        >
+          An error occurred!
+        </Text>
+        <Button
+          title="Try again"
+          onPress={loadMessages}
+          color={COLORS.PrimaryColorOn}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
@@ -155,6 +177,16 @@ const styles = StyleSheet.create({
   counterText: {
     color: COLORS.grey,
     fontFamily: "segoe-ui-regular",
+  },
+  centered: {
+    backgroundColor: COLORS.Background,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

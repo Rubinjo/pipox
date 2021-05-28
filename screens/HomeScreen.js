@@ -13,6 +13,7 @@ import * as messageActions from "../store/actions/messages";
 
 const HomeScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
+  const [error, setError] = useState();
 
   // Load all messages from the redux store
   const availableMessages = useSelector((state) => state.messages.messages);
@@ -25,36 +26,57 @@ const HomeScreen = (props) => {
     try {
       await dispatch(userActions.newUser());
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
-  }, [dispatch]);
+  }, [dispatch, setError]);
 
   // Load all messages for the first time
   const loadMessagesFirst = useCallback(async () => {
-    setRefresh(true);
     try {
       await dispatch(messageActions.fetchMessagesFirst());
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
-    setRefresh(false);
-  }, [dispatch]);
+  }, [dispatch, setError]);
 
   // Load all messages
   const loadMessages = useCallback(async () => {
+    setError(null);
     setRefresh(true);
     try {
       await dispatch(messageActions.fetchMessages(availableMessages));
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
     setRefresh(false);
-  }, [dispatch]);
+  }, [dispatch, setError]);
 
   useEffect(() => {
+    setRefresh(true);
     loadUser();
     loadMessagesFirst();
-  }, [dispatch, loadUser, loadMessages]);
+    setRefresh(false);
+  }, [dispatch, loadUser, loadMessagesFirst]);
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text
+          style={{
+            color: COLORS.white,
+            paddingBottom: Config.deviceHeight * 0.01,
+          }}
+        >
+          An error occurred!
+        </Text>
+        <Button
+          title="Try again"
+          onPress={loadMessages}
+          color={COLORS.PrimaryColorOn}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
@@ -120,6 +142,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {},
   centered: {
+    backgroundColor: COLORS.Background,
     position: "absolute",
     top: 0,
     left: 0,

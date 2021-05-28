@@ -25,8 +25,16 @@ const NewScreen = (props) => {
   // Alters firebase & redux store
   const post = async () => {
     if (postMessage.length <= 250) {
-      await dispatch(messageActions.addMessage(userId, postMessage));
-      setPostMessage("");
+      try {
+        await dispatch(messageActions.addMessage(userId, postMessage));
+        setPostMessage("");
+      } catch {
+        Alert.alert(
+          "Error",
+          "Something went wrong when posting the message, please try again.",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+        );
+      }
     } else {
       Alert.alert(
         "Message too long",

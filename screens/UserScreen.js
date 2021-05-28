@@ -17,6 +17,7 @@ import MessageCard from "../components/MessageCard";
 
 const UserScreen = (props) => {
   const [refresh, setRefresh] = useState(false);
+  const [error, setError] = useState();
 
   // Load current user details from the redux store
   const user = useSelector((state) => state.user.user);
@@ -28,11 +29,12 @@ const UserScreen = (props) => {
 
   // Load all user messages
   const loadMessages = useCallback(async () => {
+    setError(null);
     setRefresh(true);
     try {
       await dispatch(messageActions.fetchMessages(availableMessages));
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
     setRefresh(false);
   }, [dispatch]);
@@ -199,6 +201,16 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: COLORS.Background,
+  },
+  centered: {
+    backgroundColor: COLORS.Background,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
