@@ -1,32 +1,29 @@
 {
   "expo": {
     "name": "pipox",
+    "description": "A privacy focussed messaging app",
     "slug": "pipox",
     "version": "1.0.0",
+    "platforms": ["ios", "android"],
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/pipox.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/pipox_splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#414141"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/pipox.png",
+        "backgroundColor": "#414141"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }
