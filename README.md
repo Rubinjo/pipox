@@ -18,6 +18,10 @@
 
 Pipox is a messaging app in which the user can stay completely anonymous. This is done by only assigning a random user id on every restart of the app. Pipox was created with [React-Native](https://github.com/facebook/react-native) and supporting technologies like [Expo](https://github.com/expo/expo), [React Navigation V5](https://github.com/react-navigation/react-navigation), [Redux](https://github.com/reduxjs/redux) and [Firebase](https://firebase.google.com/).
 
+<p align="center">
+  <img height="500" width="auto" src="assets/pipox_showcase.png">
+</p>
+
 ## Release
 
-Pipox is not intended to be released and was mainly developed as learning project for learning to integrate [React-Native](https://github.com/facebook/react-native) with the different supporting technologies named earlier.
+Pipox is not intended to be released and was mainly developed as learning project for learning to integrate [React-Native](https://github.com/facebook/react-native) with the different supporting technologies named earlier. The connected Firebase database also has been taken down.
